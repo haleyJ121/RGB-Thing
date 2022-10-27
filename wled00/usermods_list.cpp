@@ -19,8 +19,8 @@
 #include "../usermods/Temperature/usermod_temperature.h"
 #endif
 
-#ifdef USERMOD_SN_PHOTORESISTOR
-#include "../usermods/SN_Photoresistor/usermod_sn_photoresistor.h"
+#ifdef USERMOD_A_OW_MOD
+#include "../usermods/A_OW_MOD/usermod_A_OW_MOD.h"
 #endif
 
 //#include "usermod_v2_empty.h"
@@ -103,8 +103,8 @@ void registerUsermods()
   usermods.add(new UsermodTemperature());
   #endif
 
-  #ifdef USERMOD_SN_PHOTORESISTOR
-  usermods.add(new Usermod_SN_Photoresistor());
+  #ifdef USERMOD_A_OW_MOD
+  usermods.add(new Usermod_A_OW_MOD());
   #endif
 
   //usermods.add(new UsermodRenameMe());

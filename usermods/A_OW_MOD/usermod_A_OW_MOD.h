@@ -5,14 +5,14 @@
 //Pin defaults for QuinLed Dig-Uno (A0)
 #define PHOTORESISTOR_PIN A0
 
-// the frequency to check photoresistor, 10 seconds
+// the frequency to check photoresistor, 5 seconds
 #ifndef USERMOD_SN_PHOTORESISTOR_MEASUREMENT_INTERVAL
-#define USERMOD_SN_PHOTORESISTOR_MEASUREMENT_INTERVAL 10000
+#define USERMOD_SN_PHOTORESISTOR_MEASUREMENT_INTERVAL 5000
 #endif
 
-// how many seconds after boot to take first measurement, 10 seconds
+// how many seconds after boot to take first measurement, 7 seconds
 #ifndef USERMOD_SN_PHOTORESISTOR_FIRST_MEASUREMENT_AT
-#define USERMOD_SN_PHOTORESISTOR_FIRST_MEASUREMENT_AT 10000
+#define USERMOD_SN_PHOTORESISTOR_FIRST_MEASUREMENT_AT 7000
 #endif
 
 // supplied voltage
@@ -35,7 +35,7 @@
 #define USERMOD_SN_PHOTORESISTOR_OFFSET_VALUE 5
 #endif
 
-class Usermod_SN_Photoresistor : public Usermod
+class Usermod_A_OW_MOD : public Usermod
 {
 private:
   float referenceVoltage = USERMOD_SN_PHOTORESISTOR_REFERENCE_VOLTAGE;
@@ -54,10 +54,13 @@ private:
 
   // flag set at startup
   bool disabled = false;
+  bool disabled1 = false;
+
 
   // strings to reduce flash memory usage (used more than twice)
   static const char _name[];
-  static const char _enabled[];
+  static const char _Status_bar[];
+  static const char _battery_bar[];
   static const char _readInterval[];
   static const char _referenceVoltage[];
   static const char _resistorValue[];
@@ -146,7 +149,7 @@ public:
 
   uint16_t getId()
   {
-    return USERMOD_ID_SN_PHOTORESISTOR;
+    return USERMOD_ID_A_OW_MOD;
   }
 
   /**
@@ -156,14 +159,15 @@ public:
   {
     // we add JSON object.
     JsonObject top = root.createNestedObject(FPSTR(_name)); // usermodname
-    top[FPSTR(_enabled)] = !disabled;
+    top[FPSTR(_Status_bar)] = !disabled;
+    top[FPSTR(_battery_bar)] = !disabled1;
     top[FPSTR(_readInterval)] = readingInterval / 1000;
     top[FPSTR(_referenceVoltage)] = referenceVoltage;
     top[FPSTR(_resistorValue)] = resistorValue;
     top[FPSTR(_adcPrecision)] = adcPrecision;
     top[FPSTR(_offset)] = offset;
 
-    DEBUG_PRINTLN(F("Photoresistor config saved."));
+    DEBUG_PRINTLN(F("A OW MOD config saved."));
   }
 
   /**
@@ -179,7 +183,8 @@ public:
       return false;
     }
 
-    disabled         = !(top[FPSTR(_enabled)] | !disabled);
+    disabled         = !(top[FPSTR(_Status_bar)] | !disabled);
+    disabled1         = !(top[FPSTR(_battery_bar)] | !disabled1);
     readingInterval  = (top[FPSTR(_readInterval)] | readingInterval/1000) * 1000; // convert to ms
     referenceVoltage = top[FPSTR(_referenceVoltage)] | referenceVoltage;
     resistorValue    = top[FPSTR(_resistorValue)] | resistorValue;
@@ -194,10 +199,12 @@ public:
 };
 
 // strings to reduce flash memory usage (used more than twice)
-const char Usermod_SN_Photoresistor::_name[] PROGMEM = "Photoresistor";
-const char Usermod_SN_Photoresistor::_enabled[] PROGMEM = "enabled";
-const char Usermod_SN_Photoresistor::_readInterval[] PROGMEM = "read-interval-s";
-const char Usermod_SN_Photoresistor::_referenceVoltage[] PROGMEM = "supplied-voltage";
-const char Usermod_SN_Photoresistor::_resistorValue[] PROGMEM = "resistor-value";
-const char Usermod_SN_Photoresistor::_adcPrecision[] PROGMEM = "adc-precision";
-const char Usermod_SN_Photoresistor::_offset[] PROGMEM = "offset";
+//                           _veriable         "what it says on the webpage"
+const char Usermod_A_OW_MOD::_name[] PROGMEM = "Enabled Features";
+const char Usermod_A_OW_MOD::_Status_bar[] PROGMEM = "Mirror Status bar error";
+const char Usermod_A_OW_MOD::_battery_bar[] PROGMEM = "Display battery on dismount";
+const char Usermod_A_OW_MOD::_readInterval[] PROGMEM = "read-interval-s";
+const char Usermod_A_OW_MOD::_referenceVoltage[] PROGMEM = "supplied-voltage";
+const char Usermod_A_OW_MOD::_resistorValue[] PROGMEM = "resistor-value";
+const char Usermod_A_OW_MOD::_adcPrecision[] PROGMEM = "adc-precision";
+const char Usermod_A_OW_MOD::_offset[] PROGMEM = "offset";
