@@ -1,0 +1,6 @@
+ESPAsyncUDP
+https://github.com/lorol/LITTLEFS.git
+https://github.com/Aircoookie/ESPAsyncWebServer.git @ ~2.0.2
+makuna/NeoPixelBus @ 2.6.7
+fastled/FastLED @ 3.4.0
+IRremoteESP8266 @ 2.7.18
