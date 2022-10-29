@@ -107,6 +107,17 @@ public:
       return;
     }
 
+
+      if (offset == 1)
+      {
+        applyPreset(1);
+       }
+      else
+      {
+        applyPreset(2);
+      }
+
+
     uint16_t currentLDRValue = getLuminance();
     if (checkBoundSensor(currentLDRValue, lastLDRValue, offset))
     {
@@ -132,7 +143,7 @@ public:
     if (user.isNull())
       user = root.createNestedObject(F("u"));
 
-    JsonArray lux = user.createNestedArray(F("Luminance"));
+    JsonArray lux = user.createNestedArray(F(" lol"));
 
     if (!getLuminanceComplete)
     {
@@ -144,7 +155,7 @@ public:
     }
 
     lux.add(lastLDRValue);
-    lux.add(F(" lux"));
+    lux.add(F(" lux lol"));
   }
 
   uint16_t getId()
