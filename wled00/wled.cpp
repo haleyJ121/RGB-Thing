@@ -413,12 +413,8 @@ void WLED::beginStrip()
 
 void WLED::initAP(bool resetAP)
 {
-uint32_t id = 0;
   if (!apSSID[0] || resetAP)
-for(int i=0; i<17; i=i+8) {
-  id |= ((ESP.getEfuseMac() >> (40 - i)) & 0xff) << i;
-}
-    strcpy_P(apSSID, PSTR(("Andon-" + String(id)).c_str ()));
+    strcpy_P(apSSID, PSTR(("Andon-" + escapedMac).c_str ()));
   if (resetAP)
     strcpy_P(apPass, PSTR(DEFAULT_AP_PASS));
   DEBUG_PRINT(F("Opening access point "));
