@@ -204,7 +204,7 @@ function onLoad() {
 	locip = localStorage.getItem('locIp');
 	if (!locip)
 	{
-		locip = prompt("File Mode. Please enter WLED IP!");
+		locip = prompt("File Mode. Please enter Andon IP!");
 		localStorage.setItem('locIp', locip);
 	}
 	}
@@ -792,7 +792,7 @@ function btype(b){
   return "?";
 }
 function bname(o){
-  if (o.name=="WLED") return o.ip;
+  if (o.name=="Andon") return o.ip;
   return o.name;
 }
 

@@ -348,15 +348,15 @@ void WLED::setup()
   escapedMac.toLowerCase();
   if (strcmp(cmDNS, "x") == 0)        // fill in unique mdns default
   {
-    strcpy_P(cmDNS, PSTR("wled-"));
+    strcpy_P(cmDNS, PSTR("andon-"));
     sprintf(cmDNS + 5, "%*s", 6, escapedMac.c_str() + 6);
   }
   if (mqttDeviceTopic[0] == 0) {
-    strcpy_P(mqttDeviceTopic, PSTR("wled/"));
+    strcpy_P(mqttDeviceTopic, PSTR("andon/"));
     sprintf(mqttDeviceTopic + 5, "%*s", 6, escapedMac.c_str() + 6);
   }
   if (mqttClientID[0] == 0) {
-    strcpy_P(mqttClientID, PSTR("WLED-"));
+    strcpy_P(mqttClientID, PSTR("ANDON-"));
     sprintf(mqttClientID + 5, "%*s", 6, escapedMac.c_str() + 6);
   }
 
@@ -413,11 +413,18 @@ void WLED::beginStrip()
 
 void WLED::initAP(bool resetAP)
 {
+uint32_t id = 0;
   if (apBehavior == AP_BEHAVIOR_BUTTON_ONLY && !resetAP)
     return;
 
   if (!apSSID[0] || resetAP)
-    strcpy_P(apSSID, PSTR("WLED-AP"));
+
+  
+for(int i=0; i<17; i=i+8) {
+  id |= ((ESP.getEfuseMac() >> (40 - i)) & 0xff) << i;
+}
+
+    strcpy_P(apSSID, (("Andon-" + String(id)).c_str ()));
   if (resetAP)
     strcpy_P(apPass, PSTR(DEFAULT_AP_PASS));
   DEBUG_PRINT(F("Opening access point "));

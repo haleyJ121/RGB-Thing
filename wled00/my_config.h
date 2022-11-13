@@ -19,13 +19,13 @@
 /* Uncomment to use your WIFI settings as defaults
   //WARNING: this will hardcode these as the default even after a factory reset
 */
-#define CLIENT_SSID "TRENDnet828_2.4GHz_3FDB"
+#define CLIENT_SSID "1TRENDnet828_2.4GHz_3FDB"
 #define CLIENT_PASS "8280RH90029"
 #define DEFAULT_LED_COUNT 11
 #define LEDPIN 26
 #define LEDPIN 27
 
-#define DEFAULT_AP_PASS     "RGB_Thing"
-#define DEFAULT_OTA_PASS    "Andon"
+#define DEFAULT_AP_PASS     "andon123"
+#define DEFAULT_OTA_PASS    "andon123"
 
 //#define MAX_LEDS 1500       //Maximum total LEDs. More than 1500 might create a low memory situation on ESP8266.
