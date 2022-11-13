@@ -108,33 +108,17 @@ public:
     }
 
 
-      if (offset == 1)
-      {
-        applyPreset(1);
-       }
-      else
-      {
-        applyPreset(2);
-      }
+    //  if (offset == 1)   // how to change to a preset
+     // {
+     //   applyPreset(1);
+     //  }
+    //  else
+    //  {
+    //    applyPreset(2);
+    //  }
 
 
     uint16_t currentLDRValue = getLuminance();
-    if (checkBoundSensor(currentLDRValue, lastLDRValue, offset))
-    {
-      lastLDRValue = currentLDRValue;
-
-      if (WLED_MQTT_CONNECTED)
-      {
-        char subuf[45];
-        strcpy(subuf, mqttDeviceTopic);
-        strcat_P(subuf, PSTR("/luminance"));
-        mqtt->publish(subuf, 0, true, String(lastLDRValue).c_str());
-      }
-      else
-      {
-        DEBUG_PRINTLN("Missing MQTT connection. Not publishing data");
-      }
-    }
   }
 
   void addToJsonInfo(JsonObject &root)
