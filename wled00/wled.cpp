@@ -414,23 +414,19 @@ void WLED::beginStrip()
 void WLED::initAP(bool resetAP)
 {
 uint32_t id = 0;
-  if (apBehavior == AP_BEHAVIOR_BUTTON_ONLY && !resetAP)
-    return;
-
   if (!apSSID[0] || resetAP)
-
-  
 for(int i=0; i<17; i=i+8) {
   id |= ((ESP.getEfuseMac() >> (40 - i)) & 0xff) << i;
 }
-
-    strcpy_P(apSSID, (("Andon-" + String(id)).c_str ()));
+    strcpy_P(apSSID, PSTR(("Andon-" + String(id)).c_str ()));
   if (resetAP)
     strcpy_P(apPass, PSTR(DEFAULT_AP_PASS));
   DEBUG_PRINT(F("Opening access point "));
   DEBUG_PRINTLN(apSSID);
   WiFi.softAPConfig(IPAddress(4, 3, 2, 1), IPAddress(4, 3, 2, 1), IPAddress(255, 255, 255, 0));
-  WiFi.softAP(apSSID, apPass, apChannel, apHide);
+  WiFi.softAP(apSSID, apPass, apChannel);
+
+
 
   if (!apActive) // start captive portal if AP active
   {
