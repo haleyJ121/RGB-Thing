@@ -80,7 +80,7 @@ void prepareHostname(char* hostname)
 void WiFiEvent(WiFiEvent_t event)
 {
   #ifdef WLED_USE_ETHERNET
-  char hostname[25] = "wled-";
+  char hostname[25] = "Andon-";
   #endif
   
   switch (event) {
@@ -571,7 +571,7 @@ void WLED::initConnection()
   DEBUG_PRINTLN("...");
 
   // convert the "serverDescription" into a valid DNS hostname (alphanumeric)
-  char hostname[25] = "wled-";
+  char hostname[25] = "Andon-";
   prepareHostname(hostname);
 
 #ifdef ESP8266
@@ -622,8 +622,8 @@ void WLED::initInterfaces()
 
     DEBUG_PRINTLN(F("mDNS started"));
     MDNS.addService("http", "tcp", 80);
-    MDNS.addService("wled", "tcp", 80);
-    MDNS.addServiceTxt("wled", "tcp", "mac", escapedMac.c_str());
+    MDNS.addService("Andon", "tcp", 80);
+    MDNS.addServiceTxt("Andon", "tcp", "mac", escapedMac.c_str());
   }
   server.begin();
 

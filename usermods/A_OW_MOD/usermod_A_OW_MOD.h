@@ -53,13 +53,15 @@ private:
   uint16_t lastLDRValue = -1000;
 
   // flag set at startup
-  bool disabled = false;
-  bool disabled1 = false;
+  bool Status_bar = false;
+  bool battery_bar = false;
+  bool stock = false;
 
 
   // strings to reduce flash memory usage (used more than twice)
   static const char _name[];
   static const char _Status_bar[];
+   static const char _stock[];
   static const char _battery_bar[];
   static const char _readInterval[];
   static const char _referenceVoltage[];
@@ -94,7 +96,7 @@ public:
 
   void loop()
   {
-    if (disabled || strip.isUpdating())
+    if (Status_bar || strip.isUpdating())
       return;
 
     unsigned long now = millis();
@@ -154,8 +156,9 @@ public:
   {
     // we add JSON object.
     JsonObject top = root.createNestedObject(FPSTR(_name)); // usermodname
-    top[FPSTR(_Status_bar)] = !disabled;
-    top[FPSTR(_battery_bar)] = !disabled1;
+    top[FPSTR(_Status_bar)] = !Status_bar;
+    top[FPSTR(_battery_bar)] = !battery_bar;
+    top[FPSTR(_stock)] = !stock;
     top[FPSTR(_readInterval)] = readingInterval / 1000;
     top[FPSTR(_referenceVoltage)] = referenceVoltage;
     top[FPSTR(_resistorValue)] = resistorValue;
@@ -178,8 +181,9 @@ public:
       return false;
     }
 
-    disabled         = !(top[FPSTR(_Status_bar)] | !disabled);
-    disabled1         = !(top[FPSTR(_battery_bar)] | !disabled1);
+    Status_bar         = !(top[FPSTR(_Status_bar)] | !Status_bar);
+    battery_bar        = !(top[FPSTR(_battery_bar)] | !battery_bar);
+    stock        = !(top[FPSTR(_stock)] | !stock);
     readingInterval  = (top[FPSTR(_readInterval)] | readingInterval/1000) * 1000; // convert to ms
     referenceVoltage = top[FPSTR(_referenceVoltage)] | referenceVoltage;
     resistorValue    = top[FPSTR(_resistorValue)] | resistorValue;
@@ -198,6 +202,7 @@ public:
 const char Usermod_A_OW_MOD::_name[] PROGMEM = "Enabled Features";
 const char Usermod_A_OW_MOD::_Status_bar[] PROGMEM = "Mirror Status bar error";
 const char Usermod_A_OW_MOD::_battery_bar[] PROGMEM = "Display battery on dismount";
+const char Usermod_A_OW_MOD::_stock[] PROGMEM = "Emulate stock lighting (override everything)";
 const char Usermod_A_OW_MOD::_readInterval[] PROGMEM = "read-interval-s";
 const char Usermod_A_OW_MOD::_referenceVoltage[] PROGMEM = "supplied-voltage";
 const char Usermod_A_OW_MOD::_resistorValue[] PROGMEM = "resistor-value";

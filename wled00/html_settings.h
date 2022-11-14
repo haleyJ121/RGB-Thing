@@ -35,9 +35,10 @@ function H(){window.open("https://github.com/Aircoookie/WLED/wiki/Settings#wifi-
 %CSS%%SCSS%</head><body onload="GetV()">
 <form id="form_s" name="Sf" method="post"><button type="button" onclick="B()">
 Back</button><button type="submit">Save</button><hr><h2>WiFi setup</h2><h3>
-Configure Access Point</h3>AP SSID (leave empty for no AP):<br><input name="AS" 
-maxlength="32"><br>AP password (leave empty for none):<br><input 
-type="password" name="AP" maxlength="63" pattern="(.{8,63})|()" 
+Configure Access Point (restart board to take effect)</h3>
+AP SSID (leave empty for default):<br><input name="AS" maxlength="32"><br>
+AP password (leave empty for default "andon123"):<br><input type="password" 
+name="AP" maxlength="63" pattern="(.{8,63})|()" 
 title="Empty or min. 8 characters"><br><br><hr><button type="button" 
 onclick="B()">Back</button><button type="submit">Save</button></form></body>
 </html>)=====";
