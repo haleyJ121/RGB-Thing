@@ -23,7 +23,9 @@
 #define CLIENT_PASS "8280RH90029"
 #define DEFAULT_LED_COUNT 11
 #define LEDPIN 26
-#define LEDPIN 27
+#define LIGHT_BAR_R_PIN 36  //status bar red
+#define LIGHT_BAR_G_PIN 39   //status bar green
+#define LIGHT_BAR_B_PIN 18   //status bar blue
 
 #define DEFAULT_AP_PASS     "andon123"
 #define DEFAULT_OTA_PASS    "andon123"
