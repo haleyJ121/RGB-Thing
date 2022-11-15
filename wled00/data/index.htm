@@ -6,14 +6,14 @@
 	<meta name="theme-color" content="#222222">
 	<meta content="yes" name="apple-mobile-web-app-capable">
     <link rel="shortcut icon" href="data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAqUExURQAAAP8Abv8A3LIA/wAm/wCU/wD//wD/kEz/ALb/AP/YAP9qAP8AAAAAAK+YwswAAAAOdFJOU/////////////////8ARcDcyAAAAAlwSFlzAAAOwQAADsEBuJFr7QAAAGJJREFUKFNNjEkSACEIA3HF9f/fHQiok4OmO5a0/yGJV4RCOAITxehCUZOi2Mc56exCjpIz4HAtxYoJ4lrlvoKYWewTrQlfsan3dthejC6ggaA5HJVlXnPiPyDE8mp5E7L3B6vdBx6Ovdl6AAAAAElFTkSuQmCC"/>
-	<title>RGB Thing</title>
+	<title>Andon</title>
 	<script>function feedback(){}</script>
 	<link rel="stylesheet" href="index.css">
 </head>
 <body onload="onLoad()">
 
-<div id="cv" class="overlay">Loading RGB Thing UI...</div>
-<noscript><div class="overlay" style="opacity:1;">Sorry, RGB Thing UI needs JavaScript!</div></noscript>
+<div id="cv" class="overlay">Loading Andon UI...</div>
+<noscript><div class="overlay" style="opacity:1;">Sorry, Andon UI needs JavaScript!</div></noscript>
 <div id="bg"></div>
 
 <div class="wrapper" id="top">
@@ -27,7 +27,7 @@
       <button id="buttonNodes" onclick="toggleNodes()"><i class="icons">&#xe22d;</i><p class="tab-label">Nodes</p></button></div>
 			<button onclick="window.location.href = '/settings/wifi';"><i class="icons">&#xe0a2;</i><p class="tab-label">Wifi</p></button>
 			<button onclick="window.location.href = '/settings/um';"><i class="icons">&#xe22d;</i><p class="tab-label">Config</p></button>
-		  <button id="buttonPcm" onclick="togglePcMode(true)"><i class="icons">&#xe23d;</i><p class="tab-label">Tablet Mode</p></button>
+		    <button id="buttonPcm" onclick="togglePcMode(true)"><i class="icons">&#xe23d;</i><p class="tab-label">Tablet Mode</p></button>
 		</div>
 		<div id="briwrap">
 			<p class="hd">Brightness</p>
@@ -193,7 +193,7 @@
 </div>
 
 <div id="nodes" class="modal">
-  <div id="ndlt">WLED instances</div>
+  <div id="ndlt">Andon instances</div>
   <div id="kn">Loading...</div><br>
   <button class="btn infobtn" onclick="loadNodes()">Refresh</button>
   <button class="btn infobtn" onclick="toggleNodes()">Close list</button><br>

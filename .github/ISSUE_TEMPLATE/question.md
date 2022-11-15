@@ -1,6 +1,6 @@
 ---
 name: Question
-about: Have a question about using WLED?
+about: Have a question about using Andon?
 title: ''
 labels: question
 assignees: ''

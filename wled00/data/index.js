@@ -204,7 +204,7 @@ function onLoad() {
 	locip = localStorage.getItem('locIp');
 	if (!locip)
 	{
-		locip = prompt("File Mode. Please enter WLED IP!");
+		locip = prompt("File Mode. Please enter Andon IP!");
 		localStorage.setItem('locIp', locip);
 	}
 	}
@@ -544,15 +544,8 @@ function populateInfo(i)
 
 	cn += `v${i.ver} "${vcn}"<br><br><table class="infot">
 	${urows}
-	${inforow("Build",i.vid)}
 	${inforow("Signal strength",i.wifi.signal +"% ("+ i.wifi.rssi, " dBm)")}
 	${inforow("Uptime",getRuntimeStr(i.uptime))}
-	${inforow("Free heap",heap," kB")}
-  	${inforow("Estimated current",pwru)}
-  	${inforow("Frames / second",i.leds.fps)}
-	${inforow("MAC address",i.mac)}
-	${inforow("Filesystem",i.fs.u + "/" + i.fs.t + " kB (" +Math.round(i.fs.u*100/i.fs.t) + "%)")}
-	${inforow("Environment",i.arch + " " + i.core + " (" + i.lwip + ")")}
 	</table>`;
 	d.getElementById('kv').innerHTML = cn;
 }
@@ -799,7 +792,7 @@ function btype(b){
   return "?";
 }
 function bname(o){
-  if (o.name=="WLED") return o.ip;
+  if (o.name=="Andon") return o.ip;
   return o.name;
 }
 

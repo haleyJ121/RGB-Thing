@@ -80,7 +80,7 @@ void prepareHostname(char* hostname)
 void WiFiEvent(WiFiEvent_t event)
 {
   #ifdef WLED_USE_ETHERNET
-  char hostname[25] = "wled-";
+  char hostname[25] = "Andon-";
   #endif
   
   switch (event) {
@@ -348,15 +348,15 @@ void WLED::setup()
   escapedMac.toLowerCase();
   if (strcmp(cmDNS, "x") == 0)        // fill in unique mdns default
   {
-    strcpy_P(cmDNS, PSTR("wled-"));
+    strcpy_P(cmDNS, PSTR("andon-"));
     sprintf(cmDNS + 5, "%*s", 6, escapedMac.c_str() + 6);
   }
   if (mqttDeviceTopic[0] == 0) {
-    strcpy_P(mqttDeviceTopic, PSTR("wled/"));
+    strcpy_P(mqttDeviceTopic, PSTR("andon/"));
     sprintf(mqttDeviceTopic + 5, "%*s", 6, escapedMac.c_str() + 6);
   }
   if (mqttClientID[0] == 0) {
-    strcpy_P(mqttClientID, PSTR("WLED-"));
+    strcpy_P(mqttClientID, PSTR("ANDON-"));
     sprintf(mqttClientID + 5, "%*s", 6, escapedMac.c_str() + 6);
   }
 
@@ -413,17 +413,16 @@ void WLED::beginStrip()
 
 void WLED::initAP(bool resetAP)
 {
-  if (apBehavior == AP_BEHAVIOR_BUTTON_ONLY && !resetAP)
-    return;
-
   if (!apSSID[0] || resetAP)
-    strcpy_P(apSSID, PSTR("WLED-AP"));
+    strcpy_P(apSSID, PSTR(("Andon-" + escapedMac).c_str ()));
   if (resetAP)
     strcpy_P(apPass, PSTR(DEFAULT_AP_PASS));
   DEBUG_PRINT(F("Opening access point "));
   DEBUG_PRINTLN(apSSID);
   WiFi.softAPConfig(IPAddress(4, 3, 2, 1), IPAddress(4, 3, 2, 1), IPAddress(255, 255, 255, 0));
-  WiFi.softAP(apSSID, apPass, apChannel, apHide);
+  WiFi.softAP(apSSID, apPass, apChannel);
+
+
 
   if (!apActive) // start captive portal if AP active
   {
@@ -572,7 +571,7 @@ void WLED::initConnection()
   DEBUG_PRINTLN("...");
 
   // convert the "serverDescription" into a valid DNS hostname (alphanumeric)
-  char hostname[25] = "wled-";
+  char hostname[25] = "Andon-";
   prepareHostname(hostname);
 
 #ifdef ESP8266
@@ -623,8 +622,8 @@ void WLED::initInterfaces()
 
     DEBUG_PRINTLN(F("mDNS started"));
     MDNS.addService("http", "tcp", 80);
-    MDNS.addService("wled", "tcp", 80);
-    MDNS.addServiceTxt("wled", "tcp", "mac", escapedMac.c_str());
+    MDNS.addService("Andon", "tcp", 80);
+    MDNS.addServiceTxt("Andon", "tcp", "mac", escapedMac.c_str());
   }
   server.begin();
 

@@ -200,7 +200,7 @@ using PSRAMDynamicJsonDocument = BasicJsonDocument<PSRAM_Allocator>;
 
 // Global Variable definitions
 WLED_GLOBAL char versionString[] _INIT(TOSTRING(WLED_VERSION));
-#define WLED_CODENAME "Toki"
+#define WLED_CODENAME "GT" //gt code name gt onewheel name
 
 // AP and OTA default passwords (for maximum security change them!)
 WLED_GLOBAL char apPass[65]  _INIT(DEFAULT_AP_PASS);
@@ -285,7 +285,7 @@ WLED_GLOBAL uint16_t transitionDelay _INIT(750);    // default crossfade duratio
 WLED_GLOBAL byte briMultiplier _INIT(100);          // % of brightness to set (to limit power, if you set it to 50 and set bri to 255, actual brightness will be 127)
 
 // User Interface CONFIG
-WLED_GLOBAL char serverDescription[33] _INIT("WLED");  // Name of module
+WLED_GLOBAL char serverDescription[33] _INIT("Andon");  // Name of module
 WLED_GLOBAL bool syncToggleReceive     _INIT(false);   // UIs which only have a single button for sync should toggle send+receive if this is true, only send otherwise
 
 // Sync CONFIG
