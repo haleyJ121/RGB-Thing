@@ -87,42 +87,27 @@ private:
 
     LIGHT_BAR_B = digitalRead(LIGHT_BAR_B_PIN);
 
-    //if (LIGHT_BAR_B == true){
-    //  return bool(false);
-    //} else {
+    if (LIGHT_BAR_B == true){
+      return bool(false);
+    } else {
       LIGHT_BAR_R = digitalRead(LIGHT_BAR_R_PIN);
       LIGHT_BAR_R_ANALOG = analogRead(LIGHT_BAR_R_PIN);
       LIGHT_BAR_G = digitalRead(LIGHT_BAR_G_PIN);
       //change color to lights
 
-    //  return bool(true);
-    //}
+      return bool(true);
+    }
 
 
     // if status bar rgb blue is on (in the case of white charging or blue foot pad engadement) ignore
 
   }
 
-  uint16_t getLuminance()
-  {
-    // http://forum.arduino.cc/index.php?topic=37555.0
-    // https://forum.arduino.cc/index.php?topic=185158.0
-    float volts = analogRead(PHOTORESISTOR_PIN) * (referenceVoltage / adcPrecision);
-    float amps = volts / resistorValue;
-    float lux = amps * 1000000 * 2.0;
-
-    lastMeasurement = millis();
-    getLuminanceComplete = true;
-    return uint16_t(lux);
-  }
-
-
 
 public:
   void setup()
   {
     // set pinmode
-    pinMode(PHOTORESISTOR_PIN, INPUT);
     pinMode(LIGHT_BAR_R_PIN, INPUT);
     pinMode(LIGHT_BAR_G_PIN, INPUT);
     pinMode(LIGHT_BAR_B_PIN, INPUT);
@@ -154,7 +139,6 @@ public:
     //  }
 
     bool error_bar = get_LIGHT_BAR();
-    uint16_t currentLDRValue = getLuminance();
   }
 
   void addToJsonInfo(JsonObject &root)
