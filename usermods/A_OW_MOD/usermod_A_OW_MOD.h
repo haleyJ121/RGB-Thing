@@ -87,16 +87,16 @@ private:
 
     LIGHT_BAR_B = digitalRead(LIGHT_BAR_B_PIN);
 
-    if (LIGHT_BAR_B == true){
-      return bool(false);
-    } else {
+    //if (LIGHT_BAR_B == true){
+    //  return bool(false);
+    //} else {
       LIGHT_BAR_R = digitalRead(LIGHT_BAR_R_PIN);
       LIGHT_BAR_R_ANALOG = analogRead(LIGHT_BAR_R_PIN);
       LIGHT_BAR_G = digitalRead(LIGHT_BAR_G_PIN);
       //change color to lights
 
-      return bool(true);
-    }
+    //  return bool(true);
+    //}
 
 
     // if status bar rgb blue is on (in the case of white charging or blue foot pad engadement) ignore
@@ -163,16 +163,14 @@ public:
     if (user.isNull())
       user = root.createNestedObject(F("u"));
 
-    JsonArray lux = user.createNestedArray(F(" lol"));
-
-    lux.add(LIGHT_BAR_R_ANALOG);
-    lux.add(F(" RED analog read"));
-
+    JsonArray lux = user.createNestedArray(F(" lol")); //left side thing
+    lux.add(LIGHT_BAR_R_ANALOG);                       //right side variable
+    lux.add(F(" RED analog read"));                    //right side thing
 
 
-      JsonArray blue = user.createNestedArray("blue level");
-      battery.add(LIGHT_BAR_B);
-      battery.add(F(" BLUE GPIO read"));
+      JsonArray battery = user.createNestedArray("blue level");  //left side thing
+      battery.add(LIGHT_BAR_B);                               //right side variable
+      battery.add(F(" BLUE GPIO read"));                      //right side thing
   }
 
   uint16_t getId()
