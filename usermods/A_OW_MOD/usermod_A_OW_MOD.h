@@ -128,6 +128,24 @@ public:
       return;
     }
 
+      //set effect parameters
+
+      /**
+  if (updateVal(&req, "FX=", &effectCurrent, 0, strip.getModeCount()-1) && request != nullptr) unloadPlaylist();  //unload playlist if changing FX using web request
+  updateVal(&req, "SX=", &effectSpeed);
+  updateVal(&req, "IX=", &effectIntensity);
+  updateVal(&req, "FP=", &effectPalette, 0, strip.getPaletteCount()-1);
+
+  strip.getSegment(selectedSeg);
+
+  updateVal(&req, "&A=", &bri);
+
+  updateVal(&req, "&R=", &255);
+  updateVal(&req, "&G=", &0);
+  updateVal(&req, "&B=", &255);
+  updateVal(&req, "&W=", &0);  
+  */
+
 
     //  if (offset == 1)   // how to change to a preset
      // {
@@ -137,6 +155,15 @@ public:
     //  {
     //    applyPreset(2);
     //  }
+
+    //effectSpeed
+    effectPalette = 7;
+    effectCurrent = 28;  // effect 28 is percent bar
+    effectIntensity = 30;
+    colorUpdated(CALL_MODE_DIRECT_CHANGE);
+  
+
+
 
     bool error_bar = get_LIGHT_BAR();
   }
