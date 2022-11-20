@@ -52,12 +52,22 @@ private:
   bool getLuminanceComplete = false;
   uint16_t lastLDRValue = -1000;
 
-  int LIGHT_BAR_R_ANALOG = 10;
+  int LIGHT_BAR_R_ANALOG;
   bool LIGHT_BAR_R = false;
   bool LIGHT_BAR_G = false;
   bool LIGHT_BAR_B = false;
 
+  bool FRONT_LIGHT_R = false;
+  int FRONT_LIGHT_R_ANALOG;
+  bool FRONT_LIGHT_W = false;
+  int FRONT_LIGHT_W_ANALOG;
+
+  
+
   // flag set at startup
+  bool forward = true; //on startup assume forware movment
+  bool lights_on;  // are the lights on in the app?
+
   bool Status_bar = false;
   bool battery_bar = false;
   bool stock = false;
@@ -80,29 +90,81 @@ private:
   }
 
 
-  bool get_LIGHT_BAR()
+  void get_LIGHT_BAR()
   {
     // http://forum.arduino.cc/index.php?topic=37555.0
     // https://forum.arduino.cc/index.php?topic=185158.0
 
     LIGHT_BAR_B = digitalRead(LIGHT_BAR_B_PIN);
 
-    if (LIGHT_BAR_B == true){
-      return bool(false);
-    } else {
+    if (LIGHT_BAR_B == false){
       LIGHT_BAR_R = digitalRead(LIGHT_BAR_R_PIN);
       LIGHT_BAR_R_ANALOG = analogRead(LIGHT_BAR_R_PIN);
       LIGHT_BAR_G = digitalRead(LIGHT_BAR_G_PIN);
-      //change color to lights
-
-      return bool(true);
     }
-
-
     // if status bar rgb blue is on (in the case of white charging or blue foot pad engadement) ignore
-
   }
 
+
+  void get_FRONT_LIGHT()
+  {
+
+    FRONT_LIGHT_W = digitalRead(FRONT_LIGHT_W_PIN);
+    FRONT_LIGHT_W_ANALOG = analogRead(FRONT_LIGHT_W_PIN);
+
+    FRONT_LIGHT_R = digitalRead(FRONT_LIGHT_R_PIN);
+    FRONT_LIGHT_R_ANALOG = analogRead(LIGHT_BAR_R_PIN);
+
+    if (FRONT_LIGHT_W == true || FRONT_LIGHT_R == true){ 
+      //switch to using analog input to detect switch sooner needs testing on live board
+    lights_on = true;
+    if (FRONT_LIGHT_W == true){  // if white rgbw front light is on board is going forward
+       forward = true;
+      } else {
+       forward = false;
+      }
+
+    } else {
+      lights_on = false;
+      forward = true;  
+      // if lights are off assume forward to avoide if someone turns lights
+      // off while going backwards being stuck in backwards within the program
+    }
+    // if status bar rgb blue is on (in the case of white charging or blue foot pad engadement) ignore
+  }
+
+
+  void emulate_stock()
+  {
+if (forward = true) {
+WS2812FX::Segment& seg = strip.getSegment(0); // segment 0 is front lights
+//set color (i=0 is primary, i=1 secondary i=2 tertiary)
+seg.colors[0] = ((255 << 24) | ((0&0xFF) << 16) | ((0&0xFF) << 8) | ((0&0xFF)));
+//set effect config
+seg.mode = 0;  //effect 0 = solid
+
+seg = strip.getSegment(1); // segment 0 is front lights
+//set color (i=0 is primary, i=1 secondary i=2 tertiary)
+seg.colors[0] = ((0 << 24) | ((255&0xFF) << 16) | ((0&0xFF) << 8) | ((0&0xFF)));
+//set effect config
+seg.mode = 0;  //effect 0 = solid
+
+} else {
+
+WS2812FX::Segment& seg = strip.getSegment(1); // segment 0 is front lights 1 is back
+//set color (i=0 is primary, i=1 secondary i=2 tertiary)
+seg.colors[0] = ((255 << 24) | ((0&0xFF) << 16) | ((0&0xFF) << 8) | ((0&0xFF)));
+//set effect config
+seg.mode = 0;  //effect 0 = solid
+
+seg = strip.getSegment(0); // segment 0 is front lights 1 is back
+//set color (i=0 is primary, i=1 secondary i=2 tertiary)
+seg.colors[0] = ((0 << 24) | ((255&0xFF) << 16) | ((0&0xFF) << 8) | ((0&0xFF)));
+//set effect config
+seg.mode = 0;  //effect 0 = solid
+
+}
+  }
 
 public:
   void setup()
@@ -111,6 +173,8 @@ public:
     pinMode(LIGHT_BAR_R_PIN, INPUT);
     pinMode(LIGHT_BAR_G_PIN, INPUT);
     pinMode(LIGHT_BAR_B_PIN, INPUT);
+    pinMode(FRONT_LIGHT_W_PIN, INPUT);
+    pinMode(FRONT_LIGHT_R_PIN, INPUT);
   }
 
   void loop()
@@ -135,16 +199,8 @@ public:
   updateVal(&req, "SX=", &effectSpeed);
   updateVal(&req, "IX=", &effectIntensity);
   updateVal(&req, "FP=", &effectPalette, 0, strip.getPaletteCount()-1);
+*/
 
-  strip.getSegment(selectedSeg);
-
-  updateVal(&req, "&A=", &bri);
-
-  updateVal(&req, "&R=", &255);
-  updateVal(&req, "&G=", &0);
-  updateVal(&req, "&B=", &255);
-  updateVal(&req, "&W=", &0);  
-  */
 
 
     //  if (offset == 1)   // how to change to a preset
@@ -157,16 +213,20 @@ public:
     //  }
 
     //effectSpeed
-    effectPalette = 7;
-    effectCurrent = 28;  // effect 28 is percent bar
-    effectIntensity = 30;
-    colorUpdated(CALL_MODE_DIRECT_CHANGE);
+    //effectPalette = 7;
+
+
+
+
+
+
+
+   get_FRONT_LIGHT();
+   emulate_stock();
   
+   get_LIGHT_BAR();
 
-
-
-    bool error_bar = get_LIGHT_BAR();
-  }
+  } // end of main loop
 
   void addToJsonInfo(JsonObject &root)
   {

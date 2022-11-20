@@ -27,6 +27,9 @@
 #define LIGHT_BAR_G_PIN 39   //status bar green
 #define LIGHT_BAR_B_PIN 18   //status bar blue
 
+#define FRONT_LIGHT_R_PIN 36   //status bar blue
+#define FRONT_LIGHT_W_PIN 39   //status bar blue
+
 #define DEFAULT_AP_PASS     "andon123"
 #define DEFAULT_OTA_PASS    "andon123"
 
