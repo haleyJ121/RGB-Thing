@@ -2,17 +2,8 @@
 
 #include "wled.h"
 
-
-//#define PHOTORESISTOR_PIN A0
-//#define LIGHT_BAR_R_PIN A36  //status bar red
-//#define LIGHT_BAR_G_PIN 39   //status bar green
-//#define LIGHT_BAR_B_PIN 18   //status bar blue
-//#define PHOTORESISTOR_PIN A0
-//#define PHOTORESISTOR_PIN A0
-//#define PHOTORESISTOR_PIN A0
-//#define PHOTORESISTOR_PIN A0
-//#define PHOTORESISTOR_PIN A0
-//#define PHOTORESISTOR_PIN A0
+//Pin defaults for QuinLed Dig-Uno (A0)
+#define PHOTORESISTOR_PIN A0
 
 // the frequency to check photoresistor, 5 seconds
 #ifndef USERMOD_SN_PHOTORESISTOR_MEASUREMENT_INTERVAL
@@ -35,8 +26,8 @@
 #endif
 
 // resistor size 10K hms
-#ifndef USERMOD_LIGHT_BAR_RED_ON_VALUE
-#define USERMOD_LIGHT_BAR_RED_ON_VALUE 10000.0  //red analog value considered on
+#ifndef USERMOD_SN_PHOTORESISTOR_RESISTOR_VALUE
+#define USERMOD_SN_PHOTORESISTOR_RESISTOR_VALUE 10000.0
 #endif
 
 // only report if differance grater than offset value
@@ -44,11 +35,11 @@
 #define USERMOD_SN_PHOTORESISTOR_OFFSET_VALUE 5
 #endif
 
-class Usermod_A_OW_MOD : public Usermod
+class Usermod_ANDON_MOD : public Usermod
 {
 private:
   float referenceVoltage = USERMOD_SN_PHOTORESISTOR_REFERENCE_VOLTAGE;
-  float barValueRed = USERMOD_LIGHT_BAR_RED_ON_VALUE;
+  float resistorValue = USERMOD_SN_PHOTORESISTOR_RESISTOR_VALUE;
   float adcPrecision = USERMOD_SN_PHOTORESISTOR_ADC_PRECISION;
   int8_t offset = USERMOD_SN_PHOTORESISTOR_OFFSET_VALUE;
 
@@ -58,15 +49,25 @@ private:
   // flag to indicate we have finished the first getTemperature call
   // allows this library to report to the user how long until the first
   // measurement
+  bool getLuminanceComplete = false;
+  uint16_t lastLDRValue = -1000;
 
-  bool get_LIGHT_BAR_Complete = false;
-  uint16_t LIGHT_BAR_R = -1000;
-  bool Light_bar_R_BOOL = false;
+  int LIGHT_BAR_R_ANALOG;
+  bool LIGHT_BAR_R = false;
   bool LIGHT_BAR_G = false;
   bool LIGHT_BAR_B = false;
 
+  bool FRONT_LIGHT_R = false;
+  int FRONT_LIGHT_R_ANALOG;
+  bool FRONT_LIGHT_W = false;
+  int FRONT_LIGHT_W_ANALOG;
+
+  
 
   // flag set at startup
+  bool forward = true; //on startup assume forware movment
+  bool lights_on;  // are the lights on in the app?
+
   bool Status_bar = false;
   bool battery_bar = false;
   bool stock = false;
@@ -75,11 +76,11 @@ private:
   // strings to reduce flash memory usage (used more than twice)
   static const char _name[];
   static const char _Status_bar[];
-   static const char _stock[];
+  static const char _stock[];
   static const char _battery_bar[];
   static const char _readInterval[];
   static const char _referenceVoltage[];
-  static const char _barValueRed[];
+  static const char _resistorValue[];
   static const char _adcPrecision[];
   static const char _offset[];
 
@@ -88,24 +89,81 @@ private:
     return isnan(prevValue) || newValue <= prevValue - maxDiff || newValue >= prevValue + maxDiff;
   }
 
+
   void get_LIGHT_BAR()
   {
     // http://forum.arduino.cc/index.php?topic=37555.0
     // https://forum.arduino.cc/index.php?topic=185158.0
-LIGHT_BAR_B = digitalRead(LIGHT_BAR_B_PIN);
-if (LIGHT_BAR_B == true){
-  return;
-}
 
-    LIGHT_BAR_R = analogRead(LIGHT_BAR_R_PIN);
-    if (LIGHT_BAR_R > 2000){Light_bar_R_BOOL = true;} else {Light_bar_R_BOOL = false;}
-    // ^ turn light bar analog red into bool ^
-    LIGHT_BAR_G = digitalRead(LIGHT_BAR_G_PIN);
-    
+    LIGHT_BAR_B = digitalRead(LIGHT_BAR_B_PIN);
+
+    if (LIGHT_BAR_B == false){
+      LIGHT_BAR_R = digitalRead(LIGHT_BAR_R_PIN);
+      LIGHT_BAR_R_ANALOG = analogRead(LIGHT_BAR_R_PIN);
+      LIGHT_BAR_G = digitalRead(LIGHT_BAR_G_PIN);
+    }
     // if status bar rgb blue is on (in the case of white charging or blue foot pad engadement) ignore
-  
-    get_LIGHT_BAR_Complete = true;
-    lastMeasurement = millis();
+  }
+
+
+  void get_FRONT_LIGHT()
+  {
+
+    FRONT_LIGHT_W = digitalRead(FRONT_LIGHT_W_PIN);
+    FRONT_LIGHT_W_ANALOG = analogRead(FRONT_LIGHT_W_PIN);
+
+    FRONT_LIGHT_R = digitalRead(FRONT_LIGHT_R_PIN);
+    FRONT_LIGHT_R_ANALOG = analogRead(LIGHT_BAR_R_PIN);
+
+    if (FRONT_LIGHT_W == true || FRONT_LIGHT_R == true){ 
+      //switch to using analog input to detect switch sooner needs testing on live board
+    lights_on = true;
+    if (FRONT_LIGHT_W == true){  // if white rgbw front light is on board is going forward
+       forward = true;
+      } else {
+       forward = false;
+      }
+
+    } else {
+      lights_on = false;
+      forward = true;  
+      // if lights are off assume forward to avoide if someone turns lights
+      // off while going backwards being stuck in backwards within the program
+    }
+    // if status bar rgb blue is on (in the case of white charging or blue foot pad engadement) ignore
+  }
+
+
+  void emulate_stock()
+  {
+if (forward = true) {
+WS2812FX::Segment& seg = strip.getSegment(0); // segment 0 is front lights
+//set color (i=0 is primary, i=1 secondary i=2 tertiary)
+seg.colors[0] = ((255 << 24) | ((0&0xFF) << 16) | ((0&0xFF) << 8) | ((0&0xFF)));
+//set effect config
+seg.mode = 0;  //effect 0 = solid
+
+seg = strip.getSegment(1); // segment 0 is front lights
+//set color (i=0 is primary, i=1 secondary i=2 tertiary)
+seg.colors[0] = ((0 << 24) | ((255&0xFF) << 16) | ((0&0xFF) << 8) | ((0&0xFF)));
+//set effect config
+seg.mode = 0;  //effect 0 = solid
+
+} else {
+
+WS2812FX::Segment& seg = strip.getSegment(1); // segment 0 is front lights 1 is back
+//set color (i=0 is primary, i=1 secondary i=2 tertiary)
+seg.colors[0] = ((255 << 24) | ((0&0xFF) << 16) | ((0&0xFF) << 8) | ((0&0xFF)));
+//set effect config
+seg.mode = 0;  //effect 0 = solid
+
+seg = strip.getSegment(0); // segment 0 is front lights 1 is back
+//set color (i=0 is primary, i=1 secondary i=2 tertiary)
+seg.colors[0] = ((0 << 24) | ((255&0xFF) << 16) | ((0&0xFF) << 8) | ((0&0xFF)));
+//set effect config
+seg.mode = 0;  //effect 0 = solid
+
+}
   }
 
 public:
@@ -115,13 +173,15 @@ public:
     pinMode(LIGHT_BAR_R_PIN, INPUT);
     pinMode(LIGHT_BAR_G_PIN, INPUT);
     pinMode(LIGHT_BAR_B_PIN, INPUT);
+    pinMode(FRONT_LIGHT_W_PIN, INPUT);
+    pinMode(FRONT_LIGHT_R_PIN, INPUT);
   }
 
   void loop()
   {
-    if (strip.isUpdating()){
+    if (Status_bar || strip.isUpdating())
       return;
-    }
+
     unsigned long now = millis();
 
     // check to see if we are due for taking a measurement
@@ -132,12 +192,15 @@ public:
       return;
     }
 
+      //set effect parameters
 
+      /**
+  if (updateVal(&req, "FX=", &effectCurrent, 0, strip.getModeCount()-1) && request != nullptr) unloadPlaylist();  //unload playlist if changing FX using web request
+  updateVal(&req, "SX=", &effectSpeed);
+  updateVal(&req, "IX=", &effectIntensity);
+  updateVal(&req, "FP=", &effectPalette, 0, strip.getPaletteCount()-1);
+*/
 
-  // check if the mirror status bar is true. If it is, set lights to preset colors
-  if (Status_bar == true) {
-    get_LIGHT_BAR();
-  }
 
 
     //  if (offset == 1)   // how to change to a preset
@@ -149,8 +212,21 @@ public:
     //    applyPreset(2);
     //  }
 
+    //effectSpeed
+    //effectPalette = 7;
 
-  }
+
+
+
+
+
+
+   get_FRONT_LIGHT();
+   emulate_stock();
+  
+   get_LIGHT_BAR();
+
+  } // end of main loop
 
   void addToJsonInfo(JsonObject &root)
   {
@@ -158,24 +234,19 @@ public:
     if (user.isNull())
       user = root.createNestedObject(F("u"));
 
-    JsonArray light_bar = user.createNestedArray(F(" lol"));
+    JsonArray lux = user.createNestedArray(F(" lol")); //left side thing
+    lux.add(LIGHT_BAR_R_ANALOG);                       //right side variable
+    lux.add(F(" RED analog read"));                    //right side thing
 
-    if (!get_LIGHT_BAR_Complete)
-    {
-      // if we haven't read the sensor yet, let the user know
-      // that we are still waiting for the first measurement
-      light_bar.add((USERMOD_SN_PHOTORESISTOR_FIRST_MEASUREMENT_AT - millis()) / 1000);
-      light_bar.add(F(" sec until read"));
-      return;
-    }
 
-    light_bar.add(LIGHT_BAR_R);
-    light_bar.add(F(" Light bar red analog"));
+      JsonArray battery = user.createNestedArray("blue level");  //left side thing
+      battery.add(LIGHT_BAR_B);                               //right side variable
+      battery.add(F(" BLUE GPIO read"));                      //right side thing
   }
 
   uint16_t getId()
   {
-    return USERMOD_ID_A_OW_MOD;
+    return USERMOD_ID_ANDON_MOD;
   }
 
   /**
@@ -190,7 +261,7 @@ public:
     top[FPSTR(_stock)] = !stock;
     top[FPSTR(_readInterval)] = readingInterval / 1000;
     top[FPSTR(_referenceVoltage)] = referenceVoltage;
-    top[FPSTR(_barValueRed)] = barValueRed;
+    top[FPSTR(_resistorValue)] = resistorValue;
     top[FPSTR(_adcPrecision)] = adcPrecision;
     top[FPSTR(_offset)] = offset;
 
@@ -215,7 +286,7 @@ public:
     stock        = !(top[FPSTR(_stock)] | !stock);
     readingInterval  = (top[FPSTR(_readInterval)] | readingInterval/1000) * 1000; // convert to ms
     referenceVoltage = top[FPSTR(_referenceVoltage)] | referenceVoltage;
-    barValueRed    = top[FPSTR(_barValueRed)] | barValueRed;
+    resistorValue    = top[FPSTR(_resistorValue)] | resistorValue;
     adcPrecision     = top[FPSTR(_adcPrecision)] | adcPrecision;
     offset           = top[FPSTR(_offset)] | offset;
     DEBUG_PRINT(FPSTR(_name));
@@ -228,12 +299,12 @@ public:
 
 // strings to reduce flash memory usage (used more than twice)
 //                           _veriable         "what it says on the webpage"
-const char Usermod_A_OW_MOD::_name[] PROGMEM = "Enabled Features";
-const char Usermod_A_OW_MOD::_Status_bar[] PROGMEM = "Mirror Status bar error";
-const char Usermod_A_OW_MOD::_battery_bar[] PROGMEM = "Display battery on dismount";
-const char Usermod_A_OW_MOD::_stock[] PROGMEM = "Emulate stock lighting (override everything)";
-const char Usermod_A_OW_MOD::_readInterval[] PROGMEM = "read-interval-s";
-const char Usermod_A_OW_MOD::_referenceVoltage[] PROGMEM = "supplied-voltage";
-const char Usermod_A_OW_MOD::_barValueRed[] PROGMEM = "barValueRed what is concidered on for red";
-const char Usermod_A_OW_MOD::_adcPrecision[] PROGMEM = "adc-precision";
-const char Usermod_A_OW_MOD::_offset[] PROGMEM = "offset";
+const char Usermod_ANDON_MOD::_name[] PROGMEM = "Enabled Features";
+const char Usermod_ANDON_MOD::_Status_bar[] PROGMEM = "Mirror Status bar error";
+const char Usermod_ANDON_MOD::_battery_bar[] PROGMEM = "Display battery on dismount";
+const char Usermod_ANDON_MOD::_stock[] PROGMEM = "Emulate stock lighting (override everything)";
+const char Usermod_ANDON_MOD::_readInterval[] PROGMEM = "read-interval-s";
+const char Usermod_ANDON_MOD::_referenceVoltage[] PROGMEM = "supplied-voltage";
+const char Usermod_ANDON_MOD::_resistorValue[] PROGMEM = "resistor-value";
+const char Usermod_ANDON_MOD::_adcPrecision[] PROGMEM = "adc-precision";
+const char Usermod_ANDON_MOD::_offset[] PROGMEM = "offset";

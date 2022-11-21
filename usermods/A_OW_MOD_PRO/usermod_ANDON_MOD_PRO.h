@@ -35,7 +35,7 @@
 #define USERMOD_SN_PHOTORESISTOR_OFFSET_VALUE 5
 #endif
 
-class Usermod_A_OW_MOD : public Usermod
+class Usermod_ANDON_MOD_PRO : public Usermod
 {
 private:
   float referenceVoltage = USERMOD_SN_PHOTORESISTOR_REFERENCE_VOLTAGE;
@@ -246,7 +246,7 @@ public:
 
   uint16_t getId()
   {
-    return USERMOD_ID_A_OW_MOD;
+    return USERMOD_ID_ANDON_MOD_PRO;
   }
 
   /**
@@ -299,12 +299,12 @@ public:
 
 // strings to reduce flash memory usage (used more than twice)
 //                           _veriable         "what it says on the webpage"
-const char Usermod_A_OW_MOD::_name[] PROGMEM = "Enabled Features";
-const char Usermod_A_OW_MOD::_Status_bar[] PROGMEM = "Mirror Status bar error";
-const char Usermod_A_OW_MOD::_battery_bar[] PROGMEM = "Display battery on dismount";
-const char Usermod_A_OW_MOD::_stock[] PROGMEM = "Emulate stock lighting (override everything)";
-const char Usermod_A_OW_MOD::_readInterval[] PROGMEM = "read-interval-s";
-const char Usermod_A_OW_MOD::_referenceVoltage[] PROGMEM = "supplied-voltage";
-const char Usermod_A_OW_MOD::_resistorValue[] PROGMEM = "resistor-value";
-const char Usermod_A_OW_MOD::_adcPrecision[] PROGMEM = "adc-precision";
-const char Usermod_A_OW_MOD::_offset[] PROGMEM = "offset";
+const char Usermod_ANDON_MOD_PRO::_name[] PROGMEM = "Enabled Features";
+const char Usermod_ANDON_MOD_PRO::_Status_bar[] PROGMEM = "Mirror Status bar error";
+const char Usermod_ANDON_MOD_PRO::_battery_bar[] PROGMEM = "Display battery on dismount";
+const char Usermod_ANDON_MOD_PRO::_stock[] PROGMEM = "Emulate stock lighting (override everything)";
+const char Usermod_ANDON_MOD_PRO::_readInterval[] PROGMEM = "read-interval-s";
+const char Usermod_ANDON_MOD_PRO::_referenceVoltage[] PROGMEM = "supplied-voltage";
+const char Usermod_ANDON_MOD_PRO::_resistorValue[] PROGMEM = "resistor-value";
+const char Usermod_ANDON_MOD_PRO::_adcPrecision[] PROGMEM = "adc-precision";
+const char Usermod_ANDON_MOD_PRO::_offset[] PROGMEM = "offset";

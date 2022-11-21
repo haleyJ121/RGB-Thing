@@ -19,6 +19,7 @@
 /* Uncomment to use your WIFI settings as defaults
   //WARNING: this will hardcode these as the default even after a factory reset
 */
+
 #define CLIENT_SSID "TRENDnet828_2.4GHz_3FDB"
 #define CLIENT_PASS "8280RH90029"
 #define DEFAULT_LED_COUNT 11
