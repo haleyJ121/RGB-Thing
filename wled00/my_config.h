@@ -20,8 +20,16 @@
   //WARNING: this will hardcode these as the default even after a factory reset
 */
 
-#define CLIENT_SSID "TRENDnet828_2.4GHz_3FDB"
-#define CLIENT_PASS "8280RH90029"
+#define MODEL GT    // what model of onewheel is this for? GT Pint XR Vesc
+// should effect voltage curves motor speed estimates as voltages are diffrent
+// if vesc should bring up option to input number of cells 
+
+#define PRO_VERSION true    // true for pro false for standard
+
+#define WLED_VERSION "2.2.2"  //shows up in info on UI maybe we can put shop name in here with version info
+
+#define CLIENT_SSID "TRENDnet828_2.4GHz_3FDB"  //for testing only will be disabled in production should be blank
+#define CLIENT_PASS "8280RH90029"    //for testing only will be disabled in production should be blank          
 #define DEFAULT_LED_COUNT 11
 #define LEDPIN 26
 #define LIGHT_BAR_R_PIN 36  //status bar red
