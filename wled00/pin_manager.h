@@ -52,7 +52,7 @@ enum struct PinOwner : uint8_t {
   UM_AnimatedStaircase = USERMOD_ID_ANIMATED_STAIRCASE, // 0x0E // Usermod "Animated_Staircase.h"
   // #define USERMOD_ID_RTC                             // 0x0F // Usermod "usermod_rtc.h" -- Uses "standard" I2C pins ... TODO -- enable shared I2C bus use
   // #define USERMOD_ID_ELEKSTUBE_IPS                   // 0x10 // Usermod "usermod_elekstube_ips.h" -- Uses quite a few pins ... see Hardware.h and User_Setup.h
-  // #define USERMOD_ID_A_OW_MOD                        // 0x11 // Usermod "usermod_A_OW_MOD.h" -- Uses hard-coded pin (PHOTORESISTOR_PIN == A0), but could be easily updated to use pinManager
+  // #define USERMOD_ID_ANDON_MOD                        // 0x11 // Usermod "usermod_ANDON_MOD.h" -- Uses hard-coded pin (PHOTORESISTOR_PIN == A0), but could be easily updated to use pinManager
 };
 static_assert(0u == static_cast<uint8_t>(PinOwner::None), "PinOwner::None must be zero, so default array initialization works as expected");
 
