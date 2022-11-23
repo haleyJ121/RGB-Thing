@@ -66,18 +66,23 @@ private:
 
   // flag set at startup
   bool forward = true; //on startup assume forware movment
-  bool lights_on;  // are the lights on in the app?
+  bool app_lights_on;  // are the lights on in the app?
+  bool show_lights;
+  int8_t choosen_preset;
 
   bool Status_bar = false;
   bool battery_bar = false;
   bool stock = false;
-
+  bool toggle = false;
 
   // strings to reduce flash memory usage (used more than twice)
   static const char _name[];
   static const char _Status_bar[];
   static const char _stock[];
+  static const char _toggle[];
   static const char _battery_bar[];
+  static const char _show_lights[];
+  static const char _choosen_preset[];
   static const char _readInterval[];
   static const char _referenceVoltage[];
   static const char _resistorValue[];
@@ -117,7 +122,7 @@ private:
 
     if (FRONT_LIGHT_W == true || FRONT_LIGHT_R == true){ 
       //switch to using analog input to detect switch sooner needs testing on live board
-    lights_on = true;
+    app_lights_on = true;
     if (FRONT_LIGHT_W == true){  // if white rgbw front light is on board is going forward
        forward = true;
       } else {
@@ -125,7 +130,7 @@ private:
       }
 
     } else {
-      lights_on = false;
+      app_lights_on = false;
       forward = true;  
       // if lights are off assume forward to avoide if someone turns lights
       // off while going backwards being stuck in backwards within the program
@@ -214,18 +219,24 @@ public:
 
     //effectSpeed
     //effectPalette = 7;
+   applyPreset(WiFi.softAPgetStationNum());
+   
 
+  if ( 0 != WiFi.softAPgetStationNum()){
 
-
-
+  
 
 
 
    get_FRONT_LIGHT();
-   emulate_stock();
-  
-   get_LIGHT_BAR();
 
+   if (stock == true){
+   emulate_stock();
+   } else {
+   get_LIGHT_BAR();
+   
+   }// end of stock else
+  }
   } // end of main loop
 
   void addToJsonInfo(JsonObject &root)
@@ -242,6 +253,10 @@ public:
       JsonArray battery = user.createNestedArray("blue level");  //left side thing
       battery.add(LIGHT_BAR_B);                               //right side variable
       battery.add(F(" BLUE GPIO read"));                      //right side thing
+
+      JsonArray apnumber = user.createNestedArray("Number of ap clients");  //left side thing
+      battery.add(WiFi.softAPgetStationNum());                               //right side variable
+      battery.add(F(" Clients"));                      //right side thing
   }
 
   uint16_t getId()
@@ -259,6 +274,9 @@ public:
     top[FPSTR(_Status_bar)] = !Status_bar;
     top[FPSTR(_battery_bar)] = !battery_bar;
     top[FPSTR(_stock)] = !stock;
+    top[FPSTR(_toggle)] = !toggle;
+    top[FPSTR(_show_lights)] = show_lights;
+    top[FPSTR(_choosen_preset)] = choosen_preset;
     top[FPSTR(_readInterval)] = readingInterval / 1000;
     top[FPSTR(_referenceVoltage)] = referenceVoltage;
     top[FPSTR(_resistorValue)] = resistorValue;
@@ -281,9 +299,12 @@ public:
       return false;
     }
 
-    Status_bar         = !(top[FPSTR(_Status_bar)] | !Status_bar);
-    battery_bar        = !(top[FPSTR(_battery_bar)] | !battery_bar);
-    stock        = !(top[FPSTR(_stock)] | !stock);
+    Status_bar       = !(top[FPSTR(_Status_bar)] | !Status_bar);
+    battery_bar      = !(top[FPSTR(_battery_bar)] | !battery_bar);
+    stock            = !(top[FPSTR(_stock)] | !stock);
+    toggle           = !(top[FPSTR(_toggle)] | !toggle);
+    show_lights      = top[FPSTR(_show_lights)] | show_lights;
+    choosen_preset   = top[FPSTR(_choosen_preset)] | choosen_preset;
     readingInterval  = (top[FPSTR(_readInterval)] | readingInterval/1000) * 1000; // convert to ms
     referenceVoltage = top[FPSTR(_referenceVoltage)] | referenceVoltage;
     resistorValue    = top[FPSTR(_resistorValue)] | resistorValue;
@@ -303,6 +324,10 @@ const char Usermod_ANDON_MOD::_name[] PROGMEM = "Enabled Features";
 const char Usermod_ANDON_MOD::_Status_bar[] PROGMEM = "Mirror Status bar error";
 const char Usermod_ANDON_MOD::_battery_bar[] PROGMEM = "Display battery on dismount";
 const char Usermod_ANDON_MOD::_stock[] PROGMEM = "Emulate stock lighting (override everything)";
+const char Usermod_ANDON_MOD::_toggle[] PROGMEM = "In app on/off button or toggle";
+const char Usermod_ANDON_MOD::_choosen_preset[] PROGMEM = "Preset animation to use while riding";
+const char Usermod_ANDON_MOD::_show_lights[] PROGMEM = "show_lights";
+
 const char Usermod_ANDON_MOD::_readInterval[] PROGMEM = "read-interval-s";
 const char Usermod_ANDON_MOD::_referenceVoltage[] PROGMEM = "supplied-voltage";
 const char Usermod_ANDON_MOD::_resistorValue[] PROGMEM = "resistor-value";
