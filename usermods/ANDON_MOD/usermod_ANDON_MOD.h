@@ -74,7 +74,7 @@ private:
   bool battery_bar = false;
   bool stock = false;
   bool toggle = false;
-
+  int stac;
   // strings to reduce flash memory usage (used more than twice)
   static const char _name[];
   static const char _Status_bar[];
@@ -219,10 +219,13 @@ public:
 
     //effectSpeed
     //effectPalette = 7;
-   applyPreset(WiFi.softAPgetStationNum());
+    wifi_sta_list_t stationList;
+    esp_wifi_ap_get_sta_list(&stationList);
+    stac = stationList.num;
+
    
 
-  if ( 0 != WiFi.softAPgetStationNum()){
+  if ( 0 != stac){
 
   
 
@@ -255,7 +258,7 @@ public:
       battery.add(F(" BLUE GPIO read"));                      //right side thing
 
       JsonArray apnumber = user.createNestedArray("Number of ap clients");  //left side thing
-      battery.add(WiFi.softAPgetStationNum());                               //right side variable
+      battery.add(stac);                               //right side variable
       battery.add(F(" Clients"));                      //right side thing
   }
 
