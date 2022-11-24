@@ -52,36 +52,41 @@ private:
   bool getLuminanceComplete = false;
   uint16_t lastLDRValue = -1000;
 
+#ifndef PRO_VERSION
   int LIGHT_BAR_R_ANALOG;
   bool LIGHT_BAR_R = false;
   bool LIGHT_BAR_G = false;
   bool LIGHT_BAR_B = false;
 
+  bool Status_bar = false;
+  bool battery_bar = false;
+
+#endif
+  
   bool FRONT_LIGHT_R = false;
   int FRONT_LIGHT_R_ANALOG;
   bool FRONT_LIGHT_W = false;
   int FRONT_LIGHT_W_ANALOG;
-
   
-
   // flag set at startup
   bool forward = true; //on startup assume forware movment
   bool app_lights_on;  // are the lights on in the app?
-  bool show_lights;
+  bool show_lights;  // should lights be on? basicly takes the app lights in as a toggle (not set up yet)
   int8_t choosen_preset;
 
-  bool Status_bar = false;
-  bool battery_bar = false;
+
   bool stock = false;
   bool toggle = false;
   int stac;  // number of  ppl on wifi (untested may not work idk)
   
   // strings to reduce flash memory usage (used more than twice)
   static const char _name[];
+  #ifndef PRO_VERSION
   static const char _Status_bar[];
+  static const char _battery_bar[];
+  #endif
   static const char _stock[];
   static const char _toggle[];
-  static const char _battery_bar[];
   static const char _show_lights[];
   static const char _choosen_preset[];
   static const char _readInterval[];
@@ -98,6 +103,7 @@ private:
 
   void get_LIGHT_BAR()
   {
+    #ifndef PRO_VERSION
     // http://forum.arduino.cc/index.php?topic=37555.0
     // https://forum.arduino.cc/index.php?topic=185158.0
 
@@ -109,6 +115,7 @@ private:
       LIGHT_BAR_G = digitalRead(LIGHT_BAR_G_PIN);
     }
     // if status bar rgb blue is on (in the case of white charging or blue foot pad engadement) ignore
+  #endif
   }
 
 
@@ -119,7 +126,7 @@ private:
     FRONT_LIGHT_W_ANALOG = analogRead(FRONT_LIGHT_W_PIN);
 
     FRONT_LIGHT_R = digitalRead(FRONT_LIGHT_R_PIN);
-    FRONT_LIGHT_R_ANALOG = analogRead(LIGHT_BAR_R_PIN);
+    FRONT_LIGHT_R_ANALOG = analogRead(FRONT_LIGHT_R_PIN);
 
     if (FRONT_LIGHT_W == true || FRONT_LIGHT_R == true){ 
       //switch to using analog input to detect switch sooner needs testing on live board
@@ -176,16 +183,18 @@ public:
   void setup()
   {
     // set pinmode
+    #ifndef PRO_VERSION
     pinMode(LIGHT_BAR_R_PIN, INPUT);
     pinMode(LIGHT_BAR_G_PIN, INPUT);
     pinMode(LIGHT_BAR_B_PIN, INPUT);
+    #endif
     pinMode(FRONT_LIGHT_W_PIN, INPUT);
     pinMode(FRONT_LIGHT_R_PIN, INPUT);
   }
 
   void loop()
   {
-    if (Status_bar || strip.isUpdating())
+    if (strip.isUpdating())
       return;
 
     unsigned long now = millis();
@@ -237,8 +246,12 @@ public:
    if (stock == true){
    emulate_stock();
    } else {
+
+   #ifndef PRO_VERSION
    get_LIGHT_BAR();
-   
+   #endif
+
+
    }// end of stock else
   }
   } // end of main loop
@@ -249,6 +262,8 @@ public:
     if (user.isNull())
       user = root.createNestedObject(F("u"));
 
+
+#ifndef PRO_VERSION
     JsonArray lux = user.createNestedArray(F(" lol")); //left side thing
     lux.add(LIGHT_BAR_R_ANALOG);                       //right side variable
     lux.add(F(" RED analog read"));                    //right side thing
@@ -257,10 +272,10 @@ public:
       JsonArray battery = user.createNestedArray("blue level");  //left side thing
       battery.add(LIGHT_BAR_B);                               //right side variable
       battery.add(F(" BLUE GPIO read"));                      //right side thing
-
-      JsonArray apnumber = user.createNestedArray("Number of ap clients");  //left side thing
-      battery.add(stac);                               //right side variable
-      battery.add(F(" Clients"));                      //right side thing
+#endif
+      JsonArray clients = user.createNestedArray("Number of ap clients");  //left side thing
+      clients.add(stac);                               //right side variable
+      clients.add(F(" Clients"));                      //right side thing
   }
 
   uint16_t getId()
@@ -275,8 +290,10 @@ public:
   {
     // we add JSON object.
     JsonObject top = root.createNestedObject(FPSTR(_name)); // usermodname
+    #ifndef PRO_VERSION
     top[FPSTR(_Status_bar)] = !Status_bar;
     top[FPSTR(_battery_bar)] = !battery_bar;
+    #endif
     top[FPSTR(_stock)] = !stock;
     top[FPSTR(_toggle)] = !toggle;
     top[FPSTR(_show_lights)] = show_lights;
@@ -302,9 +319,10 @@ public:
       DEBUG_PRINTLN(F(": No config found. (Using defaults.)"));
       return false;
     }
-
+    #ifndef PRO_VERSION
     Status_bar       = !(top[FPSTR(_Status_bar)] | !Status_bar);
     battery_bar      = !(top[FPSTR(_battery_bar)] | !battery_bar);
+    #endif
     stock            = !(top[FPSTR(_stock)] | !stock);
     toggle           = !(top[FPSTR(_toggle)] | !toggle);
     show_lights      = top[FPSTR(_show_lights)] | show_lights;
@@ -325,8 +343,10 @@ public:
 // strings to reduce flash memory usage (used more than twice)
 //                           _veriable         "what it says on the webpage"
 const char Usermod_ANDON_MOD::_name[] PROGMEM = "Enabled Features";
+#ifndef PRO_VERSION
 const char Usermod_ANDON_MOD::_Status_bar[] PROGMEM = "Mirror Status bar error";
 const char Usermod_ANDON_MOD::_battery_bar[] PROGMEM = "Display battery on dismount";
+#endif
 const char Usermod_ANDON_MOD::_stock[] PROGMEM = "Emulate stock lighting (override everything)";
 const char Usermod_ANDON_MOD::_toggle[] PROGMEM = "In app on/off button or toggle";
 const char Usermod_ANDON_MOD::_choosen_preset[] PROGMEM = "Preset animation to use while riding";
