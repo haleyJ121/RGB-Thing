@@ -24,7 +24,7 @@
 // should effect voltage curves motor speed estimates as voltages are diffrent
 // if vesc should bring up option to input number of cells 
 
-#define PRO_VERSION true    // true for pro false for standard
+//#define PRO_VERSION false    // false for standard commented out for pro
 
 #define WLED_VERSION "2.2.2"  //shows up in info on UI maybe we can put shop name in here with version info
 
