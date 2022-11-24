@@ -74,7 +74,8 @@ private:
   bool battery_bar = false;
   bool stock = false;
   bool toggle = false;
-  int stac;
+  int stac;  // number of  ppl on wifi (untested may not work idk)
+  
   // strings to reduce flash memory usage (used more than twice)
   static const char _name[];
   static const char _Status_bar[];

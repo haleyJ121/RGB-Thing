@@ -41,5 +41,6 @@
 
 #define DEFAULT_AP_PASS     "andon123"
 #define DEFAULT_OTA_PASS    "andon123"
+#define DEFAULT_LED_TYPE TYPE_SK6812_RGBW
 
 //#define MAX_LEDS 1500       //Maximum total LEDs. More than 1500 might create a low memory situation on ESP8266.
