@@ -20,13 +20,13 @@
   //WARNING: this will hardcode these as the default even after a factory reset
 */
 
-#define MODEL GT    // what model of onewheel is this for? GT Pint XR Vesc
-// should effect voltage curves motor speed estimates as voltages are diffrent
-// if vesc should bring up option to input number of cells 
+#define MODEL GT    // what model of onewheel is this for? (GT, Pint, XR, or Vesc) (pintX uses pint)
+// this should effect voltage curves & motor speed estimates, as voltages are diffrent for teh GT, XR/pint, and vesc
+// if vesc should bring up option to input number of cells in series,as to determine total voltage 
 
-//#define PRO_VERSION false    // false for standard commented out for pro
+//#define PRO_VERSION false    // false for ANDON_STD, commented out for ANDON_PRO
 
-#define WLED_VERSION "2.2.2"  //shows up in info on UI maybe we can put shop name in here with version info
+#define WLED_VERSION "2.2.2"  //shows up in info on UI (maybe we can put shop name in here with version info)
 
 #define CLIENT_SSID "TRENDnet828_2.4GHz_3FDBh"  //for testing only will be disabled in production should be blank
 #define CLIENT_PASS "8280RH90029"    //for testing only will be disabled in production should be blank          

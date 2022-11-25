@@ -57,7 +57,7 @@
 #define USERMOD_ID_ANIMATED_STAIRCASE    14     //Usermod "Animated_Staircase.h"
 #define USERMOD_ID_RTC                   15     //Usermod "usermod_rtc.h"
 #define USERMOD_ID_ELEKSTUBE_IPS         16     //Usermod "usermod_elekstube_ips.h"
-#define USERMOD_ID_ANDON_MOD              17     //Usermod "usermod_ANDON_MOD.h"
+#define USERMOD_ID_ANDON_STD             17     //Usermod "usermod_ANDON_STD.h"
 #define USERMOD_ID_BATTERY_STATUS_BASIC  18     //Usermod "usermod_v2_battery_status_basic.h"
 
 //Access point behavior

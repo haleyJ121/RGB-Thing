@@ -19,8 +19,8 @@
 #include "../usermods/Temperature/usermod_temperature.h"
 #endif
 
-#ifdef USERMOD_ANDON_MOD
-#include "../usermods/ANDON_MOD/usermod_ANDON_MOD.h"
+#ifdef USERMOD_ANDON_STD
+#include "../usermods/ANDON_STD/usermod_ANDON_STD.h"
 #endif
 
 //#include "usermod_v2_empty.h"
@@ -103,8 +103,8 @@ void registerUsermods()
   usermods.add(new UsermodTemperature());
   #endif
 
-  #ifdef USERMOD_ANDON_MOD
-  usermods.add(new Usermod_ANDON_MOD());
+  #ifdef USERMOD_ANDON_STD
+  usermods.add(new Usermod_ANDON_STD());
   #endif
 
   //usermods.add(new UsermodRenameMe());
