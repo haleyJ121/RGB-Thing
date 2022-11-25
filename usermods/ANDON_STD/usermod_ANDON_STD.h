@@ -313,7 +313,6 @@ public:
       return;
 
     unsigned long now = millis();
-
     // check to see if we are due for taking a measurement
     // lastMeasurement will not be updated until the conversion
     // is complete the the reading is finished
@@ -348,42 +347,40 @@ public:
     esp_wifi_ap_get_sta_list(&stationList);
     stac = stationList.num;
 
-    if ( 0 != stac)
+    if (0 != stac)
     {
-    get_DIRECTION();
-
-    if (stock == true)
-    {
-      emulate_stock();
-    } else 
-    {
-      #ifndef PRO_VERSION
-      get_LIGHT_BAR();
-      #endif
-    }
-    }   
+      get_DIRECTION();
+      if (stock == true)
+      {
+        emulate_stock();
+      } else 
+      {
+        #ifndef PRO_VERSION
+        get_LIGHT_BAR();
+        #endif
+      }
+  }   
   } // end of main loop
 
   void addToJsonInfo(JsonObject &root)
   {
     JsonObject user = root[F("u")];
     if (user.isNull())
+    {
       user = root.createNestedObject(F("u"));
-
-
-#ifndef PRO_VERSION
+    }
+    #ifndef PRO_VERSION
     JsonArray lux = user.createNestedArray(F(" lol")); //left side thing
     lux.add(LIGHT_BAR_R_ANALOG);                       //right side variable
     lux.add(F(" RED analog read"));                    //right side thing
 
-
-      JsonArray battery = user.createNestedArray("blue level");  //left side thing
-      battery.add(LIGHT_BAR_B);                               //right side variable
-      battery.add(F(" BLUE GPIO read"));                      //right side thing
-#endif
-      JsonArray clients = user.createNestedArray("Number of ap clients");  //left side thing
-      clients.add(stac);                               //right side variable
-      clients.add(F(" Clients"));                      //right side thing
+    JsonArray battery = user.createNestedArray("blue level");  //left side thing
+    battery.add(LIGHT_BAR_B);                               //right side variable
+    battery.add(F(" BLUE GPIO read"));                      //right side thing
+    #endif
+    JsonArray clients = user.createNestedArray("Number of ap clients");  //left side thing
+    clients.add(stac);                               //right side variable
+    clients.add(F(" Clients"));                      //right side thing
   }
 
   uint16_t getId()
@@ -392,8 +389,8 @@ public:
   }
 
   /**
-     * addToConfig() (called from set.cpp) stores persistent properties to cfg.json
-     */
+  * addToConfig() (called from set.cpp) stores persistent properties to cfg.json
+  **/
   void addToConfig(JsonObject &root)
   {
     // we add JSON object.
@@ -417,7 +414,8 @@ public:
 
   /**
   * readFromConfig() is called before setup() to populate properties from values stored in cfg.json
-  */
+  **/
+  
   bool readFromConfig(JsonObject &root)
   {
     // we look for JSON object.
