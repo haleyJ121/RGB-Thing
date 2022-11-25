@@ -100,6 +100,117 @@ private:
     return isnan(prevValue) || newValue <= prevValue - maxDiff || newValue >= prevValue + maxDiff;
   }
 
+  //ANDON PRO-specific functions:
+  /**
+
+    void MOTOR_ENGAGED() //determine if the motor is engaged (used as trigger for board-idle animations)
+    {
+
+    }
+
+    void GET_SPEED() //determine a rough estimate of how fast the motor is spinning
+    {
+      //the top speed of these boards is defined as their freespin speed, take a range of 0 to [freespin speed]
+      //subdivided into N sub-ranges. These sub-ranges should be of a high enough fidelity that animations are not
+      //visually stuttery as speed increases/decreases (roughly 8-10? make N dynamic/programmable if easy to do).
+      //N is proportional to a scalar value, which is used to scale up/down the speed of the lighting animation
+      //when the board speed is within one of the ranges, scale the animation speed accordingly 
+    }
+
+    void GET_BATT() //determine the battery level based upon battery voltage input
+    {
+      //most of the time, this function should be performed when the baord is idle, because when the board is engaged, 
+      //voltage will drop as more amperage is drawn. This can be programmed/accounted for, but will take time to develop for
+      //a feature that is seldom used when riding
+    }
+
+    void mimic_error_codes() //if the lightbar is blinking (condition 1) orange (condition 2), make the head/taillights do the same
+    {
+      
+    }
+
+    void OVERRIDE_LIGHTBAR() //when the lightbar is not being turned on by FM controls, enable this function
+    {
+      //to tell Andon that it is able to output data to the lightbar (requires additinal LEDs/hardware to light up the lightbar)
+    }
+
+    void SHOP_MODE() //enables shop diagnostics tools
+    {
+
+    }
+
+    void SPEEDSCALE_BRIGHTNESS() //As the board goes faster, make the headlights get brighter and the taillights dimmer, so the 
+    //total amount of power used remains the same. This increases headlight throw, which is more useful at speed
+    {
+
+    }
+
+    void BATTERY_GRAPH() //when the board is idle, display the battery level as a bar graph upon the rear led pcb upon the ground
+    //optionally (if easy to program) set the front led pcb to visualize cell balance levels at a very dim brightness
+    {
+
+    }
+
+    void IMU_POSN_INPUT() //determine board orientation 
+    {
+
+    }
+
+    void isMallgrab() //using IMU_POSN_INPUT, determine if the board is being carried vertically by the front handle
+    {
+
+    }
+
+    void isAirborne() //using IMU_POSN_INPUT, approximate if the board is travelling in an inverted parabola, if the board's trajectory
+    // matches a perfect parabola within a programmable threshold, set a boolean to represent being airborne or not 
+    {
+
+    }
+
+    void trailRate() //use IMU data input to quantify the following:
+    // 1.) trail chunkiness - a function of z-variance detected by the IMU, measured over a long timescale
+    // 2.) altitude gain/loss - a function of the average slope of z acceleration measured over long distances
+    // 3.) average speed - a function of how high/low the average speed of a run is
+    // 4.) motor disengagement - worse trails require you to dismount more frequently, better trails do not. count 
+    // how many times the motor disengages during a given run
+    //how is the start/stop of a trail or segment measured?
+    //all of the above calculation results in a color assignment to the trail run, like how trails are rated green, blue, black, etc
+    {
+
+    }
+
+    void isBraking() //using IMU_POSN_INPUT, determine when the board is decellerating, blink the brake light 
+    // eitherred/ or something with high visibility like F1 cars in the rain
+    {
+
+    }
+
+    void trickTrainer() //using IMU_POSN_INPUT, take pre-defined profiles for things like curb nudges, bonks, revert 180's, etc
+    //and quantify/define them as a function of motor speed/acceleration, board orientation, and cartesian position to help new
+    //riders better achieve tricks. the idea is to provide feedback of "you need to push the nose down harder to nudge" or
+    //you need to be going faster and sink the nose more to 180" upon attempting a trick, the LEDs are on a color-scale from
+    //red to green (good to bad) of how closely your attempt matched the profile for that trick. (identifying how a trick is
+    //defined could conceptuallybe as simple as recording the same metrics used to evaluate the new rider to compare against)
+    {
+
+    }
+
+    void timer_countdown() //auxilliary countdown timer to be used within other functions, mainly for transition delays
+    // between board enganged/disengaged and direction change states
+
+  **/
+
+
+
+
+
+
+
+
+
+
+
+
 
   void get_LIGHT_BAR() //see what color the GT/pint lightbar is, if it is on at all
   // if the GT/pint lightbar is displaying blue light (in the case of white (charging/displaying battery level)
