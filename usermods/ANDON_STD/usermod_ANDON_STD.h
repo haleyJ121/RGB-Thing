@@ -69,13 +69,13 @@ private:
   int FRONT_LIGHT_W_ANALOG;
   
   // flag set at startup
-  bool forward = true; //on startup assume forware movment
-  bool app_lights_on;  // are the lights on in the app?
-  bool show_lights;  // should lights be on? basicly takes the app lights in as a toggle (not set up yet)
+  bool forward = true; //upon system startup, assume forward board movement
+  bool app_lights_on;  // are the head/tail lights on in the app?
+  bool show_lights;  // are the lights turned on in the FM app? (not set up yet)
   int8_t choosen_preset;
 
 
-  bool stock = false;
+  bool stock = false; // is stock lighitng override enabled?
   bool toggle = false;
   int stac;  // number of  ppl on wifi (untested may not work idk)
   
@@ -101,82 +101,86 @@ private:
   }
 
 
-  void get_LIGHT_BAR()
+  void get_LIGHT_BAR() //see what color the GT/pint lightbar is, if it is on at all
+  // if the GT/pint lightbar is displaying blue light (in the case of white (charging/displaying battery level)
+  // or blue (foot pad engagement feedback) ignore the lightbar output)  
   {
     #ifndef PRO_VERSION
     // http://forum.arduino.cc/index.php?topic=37555.0
     // https://forum.arduino.cc/index.php?topic=185158.0
 
-    LIGHT_BAR_B = digitalRead(LIGHT_BAR_B_PIN);
+    LIGHT_BAR_B = digitalRead(LIGHT_BAR_B_PIN); //see if the lightbar is outputting blue light (Y/N)
 
-    if (LIGHT_BAR_B == false){
-      LIGHT_BAR_R = digitalRead(LIGHT_BAR_R_PIN);
-      LIGHT_BAR_R_ANALOG = analogRead(LIGHT_BAR_R_PIN);
-      LIGHT_BAR_G = digitalRead(LIGHT_BAR_G_PIN);
+    if (LIGHT_BAR_B == false /** && the lightbar is on**/) //if there is no blue light, determine what color the lightbar is
+    {
+      LIGHT_BAR_R = digitalRead(LIGHT_BAR_R_PIN); //see if the lightbar is outputting any red light (Y/N)
+      LIGHT_BAR_R_ANALOG = analogRead(LIGHT_BAR_R_PIN); //see how much red light the lightbar is outputting, if any
+      LIGHT_BAR_G = digitalRead(LIGHT_BAR_G_PIN); // see if the lightbar is outputting any green light (Y/N)
     }
-    // if status bar rgb blue is on (in the case of white charging or blue foot pad engadement) ignore
   #endif
   }
 
-
-  void get_FRONT_LIGHT()
+  void get_DIRECTION() //determine what direction the board is going in (forward/reverse; no stationary)
   {
 
-    FRONT_LIGHT_W = digitalRead(FRONT_LIGHT_W_PIN);
-    FRONT_LIGHT_W_ANALOG = analogRead(FRONT_LIGHT_W_PIN);
+    FRONT_LIGHT_W = digitalRead(FRONT_LIGHT_W_PIN); //is the front light strip white? (Y/N)
+    FRONT_LIGHT_W_ANALOG = analogRead(FRONT_LIGHT_W_PIN); //how bright is the white LED on the front LED strip? (faster detection than digitalRead)
 
-    FRONT_LIGHT_R = digitalRead(FRONT_LIGHT_R_PIN);
-    FRONT_LIGHT_R_ANALOG = analogRead(FRONT_LIGHT_R_PIN);
+    FRONT_LIGHT_R = digitalRead(FRONT_LIGHT_R_PIN); //is the front light red? (Y/N)
+    FRONT_LIGHT_R_ANALOG = analogRead(FRONT_LIGHT_R_PIN); //how bright is the white LED on the front LED strip? (faster detection than the digitalRead)
 
-    if (FRONT_LIGHT_W == true || FRONT_LIGHT_R == true){ 
-      //switch to using analog input to detect switch sooner needs testing on live board
+    if (FRONT_LIGHT_W == true || FRONT_LIGHT_R == true) //if the board's lights are turned on in the app
+    { 
+      //switch to using analog input to detect switch sooner (needs testing on live board)
     app_lights_on = true;
-    if (FRONT_LIGHT_W == true){  // if white rgbw front light is on board is going forward
-       forward = true;
-      } else {
+    if (FRONT_LIGHT_W == true) // if the board is going forward
+    {  
+      forward = true;
+    } 
+    else if (FRONT_LIGHT_R == true) //if the board is going backwards
+    {
        forward = false;
-      }
-
-    } else {
-      app_lights_on = false;
-      forward = true;  
-      // if lights are off assume forward to avoide if someone turns lights
-      // off while going backwards being stuck in backwards within the program
     }
-    // if status bar rgb blue is on (in the case of white charging or blue foot pad engadement) ignore
+
+    } else //the head/tail lights are not on 
+    { 
+      app_lights_on = false;
+      forward = true;
+      // if the board lights are off, assume the board is going forward. Otherwise, if someone turns lights
+      // off while going backwards, the program will retain the backwards direction permanently
+    }
   }
 
 
-  void emulate_stock()
+  void emulate_stock() //restore stock headlight/tailight functionality
   {
-if (forward = true) {
-WS2812FX::Segment& seg = strip.getSegment(0); // segment 0 is front lights
-//set color (i=0 is primary, i=1 secondary i=2 tertiary)
-seg.colors[0] = ((255 << 24) | ((0&0xFF) << 16) | ((0&0xFF) << 8) | ((0&0xFF)));
-//set effect config
-seg.mode = 0;  //effect 0 = solid
+    if (forward = true) //if the board is going forward
+    {
+      WS2812FX::Segment& seg = strip.getSegment(0); // segment 0 is front lights
+      //set color (i=0 is primary, i=1 secondary i=2 tertiary)
+      seg.colors[0] = ((255 << 24) | ((0&0xFF) << 16) | ((0&0xFF) << 8) | ((0&0xFF)));
+      //set effect config
+      seg.mode = 0;  //effect 0 = solid
 
-seg = strip.getSegment(1); // segment 0 is front lights
-//set color (i=0 is primary, i=1 secondary i=2 tertiary)
-seg.colors[0] = ((0 << 24) | ((255&0xFF) << 16) | ((0&0xFF) << 8) | ((0&0xFF)));
-//set effect config
-seg.mode = 0;  //effect 0 = solid
+      seg = strip.getSegment(1); // segment 0 is front lights
+      //set color (i=0 is primary, i=1 secondary i=2 tertiary)
+      seg.colors[0] = ((0 << 24) | ((255&0xFF) << 16) | ((0&0xFF) << 8) | ((0&0xFF)));
+      //set effect config
+      seg.mode = 0;  //effect 0 = solid
+    } else if (forward == false) //if the board is going backwards
+    {
+      WS2812FX::Segment& seg = strip.getSegment(1); // segment 0 is front lights 1 is back
+      //set color (i=0 is primary, i=1 secondary i=2 tertiary)
+      seg.colors[0] = ((255 << 24) | ((0&0xFF) << 16) | ((0&0xFF) << 8) | ((0&0xFF)));
+      //set effect config
+      seg.mode = 0;  //effect 0 = solid
 
-} else {
-
-WS2812FX::Segment& seg = strip.getSegment(1); // segment 0 is front lights 1 is back
-//set color (i=0 is primary, i=1 secondary i=2 tertiary)
-seg.colors[0] = ((255 << 24) | ((0&0xFF) << 16) | ((0&0xFF) << 8) | ((0&0xFF)));
-//set effect config
-seg.mode = 0;  //effect 0 = solid
-
-seg = strip.getSegment(0); // segment 0 is front lights 1 is back
-//set color (i=0 is primary, i=1 secondary i=2 tertiary)
-seg.colors[0] = ((0 << 24) | ((255&0xFF) << 16) | ((0&0xFF) << 8) | ((0&0xFF)));
-//set effect config
-seg.mode = 0;  //effect 0 = solid
-
-}
+      seg = strip.getSegment(0); // segment 0 is front lights 1 is back
+      //set color (i=0 is primary, i=1 secondary i=2 tertiary)
+      seg.colors[0] = ((0 << 24) | ((255&0xFF) << 16) | ((0&0xFF) << 8) | ((0&0xFF)));
+      //set effect config
+      seg.mode = 0;  //effect 0 = solid
+    }
   }
 
 public:
@@ -192,7 +196,7 @@ public:
     pinMode(FRONT_LIGHT_R_PIN, INPUT);
   }
 
-  void loop()
+  void loop() //main
   {
     if (strip.isUpdating())
       return;
@@ -233,27 +237,20 @@ public:
     esp_wifi_ap_get_sta_list(&stationList);
     stac = stationList.num;
 
-   
+    if ( 0 != stac)
+    {
+    get_DIRECTION();
 
-  if ( 0 != stac){
-
-  
-
-
-
-   get_FRONT_LIGHT();
-
-   if (stock == true){
-   emulate_stock();
-   } else {
-
-   #ifndef PRO_VERSION
-   get_LIGHT_BAR();
-   #endif
-
-
-   }// end of stock else
-  }
+    if (stock == true)
+    {
+      emulate_stock();
+    } else 
+    {
+      #ifndef PRO_VERSION
+      get_LIGHT_BAR();
+      #endif
+    }
+    }   
   } // end of main loop
 
   void addToJsonInfo(JsonObject &root)
