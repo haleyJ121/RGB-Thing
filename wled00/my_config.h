@@ -31,13 +31,19 @@
 #define CLIENT_SSID "TRENDnet828_2.4GHz_3FDBh"  //for testing only will be disabled in production should be blank
 #define CLIENT_PASS "8280RH90029"    //for testing only will be disabled in production should be blank          
 #define DEFAULT_LED_COUNT 11
-#define LEDPIN 26
+
+#define LEDPIN 26 //front LED PCB signal output
+#define LEDPIN_REAR 17 //rear LED PCB signal output
+
 #define LIGHT_BAR_R_PIN 36  //status bar red
 #define LIGHT_BAR_G_PIN 39   //status bar green
 #define LIGHT_BAR_B_PIN 18   //status bar blue
 
-#define FRONT_LIGHT_R_PIN 36   //status bar blue
-#define FRONT_LIGHT_W_PIN 39   //status bar blue
+#define FRONT_LIGHT_R_PIN 36   //front LED PCB red LED driver controller output
+#define FRONT_LIGHT_W_PIN 39   //front LED PCB white LED driver controller output
+
+#define REAR_LIGHT_R_PIN 34 //rear LED PCB red LED driver controller output
+#define REAR_LIGHT_W_PIN 35 //rear LED PCB white LED driver controller output
 
 #define DEFAULT_AP_PASS     "andon123"
 #define DEFAULT_OTA_PASS    "andon123"

@@ -33,9 +33,9 @@ class AutoSaveUsermod : public Usermod {
     bool enabled = true;
 
     // configurable parameters
-    uint16_t autoSaveAfterSec = 15;       // 15s by default
+    uint16_t autoSaveAfterSec = 3;       // 15s by default
     uint8_t autoSavePreset = 250;         // last possible preset
-    bool applyAutoSaveOnBoot = false;     // do we load auto-saved preset on boot?
+    bool applyAutoSaveOnBoot = true;     // do we load auto-saved preset on boot?
 
     // If we've detected the need to auto save, this will be non zero.
     unsigned long autoSaveAfter = 0;

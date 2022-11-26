@@ -295,17 +295,27 @@ private:
   }
 
 public:
-  void setup()
-  {
-    // set pinmode
+  void setup() //set up I/O
+    {
     #ifndef PRO_VERSION
-    pinMode(LIGHT_BAR_R_PIN, INPUT);
-    pinMode(LIGHT_BAR_G_PIN, INPUT);
-    pinMode(LIGHT_BAR_B_PIN, INPUT);
+    pinMode(LIGHT_BAR_R_PIN, INPUT); //pint/GT lightbar red channel input
+    pinMode(LIGHT_BAR_G_PIN, INPUT); //pint/GT lightbar red channel input
+    pinMode(LIGHT_BAR_B_PIN, INPUT); //pint/GT lightbar red channel input
+    //pinMode([motor phase input variable], INPUT) //motor phase signal
+    //pinMode([battery voltage input variable], INPUT) //battery voltage
+    //pinMode([IMU input variable], INPUT) //IMU data input
     #endif
-    pinMode(FRONT_LIGHT_W_PIN, INPUT);
-    pinMode(FRONT_LIGHT_R_PIN, INPUT);
+    pinMode(FRONT_LIGHT_W_PIN, INPUT); //front headlight
+    pinMode(FRONT_LIGHT_R_PIN, INPUT); //front taillight
+    pinMode(REAR_LIGHT_W_PIN, INPUT); //rear headlight
+    pinMode(REAR_LIGHT_R_PIN, INPUT); //rear taillight
   }
+
+  //*************************************************************************************************************************************************************************
+  //*************************************************************************************************************************************************************************
+  //********************************************************************************* MAIN **********************************************************************************
+  //*************************************************************************************************************************************************************************
+  //*************************************************************************************************************************************************************************
 
   void loop() //main
   {
@@ -321,28 +331,6 @@ public:
       return;
     }
 
-      //set effect parameters
-
-      /**
-  if (updateVal(&req, "FX=", &effectCurrent, 0, strip.getModeCount()-1) && request != nullptr) unloadPlaylist();  //unload playlist if changing FX using web request
-  updateVal(&req, "SX=", &effectSpeed);
-  updateVal(&req, "IX=", &effectIntensity);
-  updateVal(&req, "FP=", &effectPalette, 0, strip.getPaletteCount()-1);
-*/
-
-
-
-    //  if (offset == 1)   // how to change to a preset
-     // {
-     //   applyPreset(1);
-     //  }
-    //  else
-    //  {
-    //    applyPreset(2);
-    //  }
-
-    //effectSpeed
-    //effectPalette = 7;
     wifi_sta_list_t stationList;
     esp_wifi_ap_get_sta_list(&stationList);
     stac = stationList.num;
@@ -409,7 +397,7 @@ public:
     top[FPSTR(_adcPrecision)] = adcPrecision;
     top[FPSTR(_offset)] = offset;
 
-    DEBUG_PRINTLN(F("A OW MOD config saved."));
+    DEBUG_PRINTLN(F("Andon config saved."));
   }
 
   /**
