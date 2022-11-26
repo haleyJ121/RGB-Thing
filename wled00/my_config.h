@@ -28,8 +28,8 @@
 
 #define WLED_VERSION "2.2.2"  //shows up in info on UI (maybe we can put shop name in here with version info)
 
-#define CLIENT_SSID "TRENDnet828_2.4GHz_3FDBh"  //for testing only will be disabled in production should be blank
-#define CLIENT_PASS "8280RH90029"    //for testing only will be disabled in production should be blank          
+//#define CLIENT_SSID "TRENDnet828_2.4GHz_3FDBh"  //for testing only will be disabled in production should be blank
+//#define CLIENT_PASS "8280RH90029"    //for testing only will be disabled in production should be blank          
 #define DEFAULT_LED_COUNT 11
 
 #define LEDPIN 26 //front LED PCB signal output

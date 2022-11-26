@@ -209,8 +209,14 @@ private:
 
 
 
-
-
+  void BOOTUP_SEQUENCE() //user defined bootup light animation that only runs in the first loop of setup() upon powering the board on
+  {
+    //store the animation here
+    //store the color channels here
+    //store the brightness here
+    //store the animation speed here
+    //store the duration here
+  }
 
   void get_LIGHT_BAR() //see what color the GT/pint lightbar is, if it is on at all
   // if the GT/pint lightbar is displaying blue light (in the case of white (charging/displaying battery level)
@@ -309,6 +315,7 @@ public:
     pinMode(FRONT_LIGHT_R_PIN, INPUT); //front taillight
     pinMode(REAR_LIGHT_W_PIN, INPUT); //rear headlight
     pinMode(REAR_LIGHT_R_PIN, INPUT); //rear taillight
+    BOOTUP_SEQUENCE();
   }
 
   //*************************************************************************************************************************************************************************
